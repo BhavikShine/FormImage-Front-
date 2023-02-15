@@ -4,9 +4,11 @@ import React, { useState } from "react";
 import Dropzone from "react-dropzone";
 import logo from "../assets/logo.png";
 import * as Yup from "yup";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
+import jwt_decode from "jwt-decode";
 import Loader from "./Loader";
 import PopupDialog from "./Dialog";
+import Cookies from 'js-cookie'
 import "./Formik.css"
 const FormSchema = Yup.object().shape({
   name: Yup.string()
@@ -52,6 +54,10 @@ const Formiks = () => {
   const [serverError, setServerError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const token = Cookies.get("tokenShine2023");
+  const decoded = jwt_decode(token);
+  
+
   const initialValues = {
     name: "",
     aadharNumber: "",
@@ -91,6 +97,8 @@ const Formiks = () => {
       formData.append("area", values.area);
       formData.append("city", values.city);
       formData.append("ward", values.ward);
+      formData.append("userId", decoded.id);
+
 
       const res = await axios.post(
         "https://backend-form.onrender.com/api/v1/submitform",
