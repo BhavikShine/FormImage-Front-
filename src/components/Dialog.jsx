@@ -18,9 +18,9 @@ const PopupDialog = ({ isOpen, message, onClose }) => {
             </span>
 
             <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-              <div className="bg-red-500 px-4 py-3">
+              <div className={`${message === "Form Created Successfully" ? "bg-green-700 px-4 py-3" : "bg-red-500 px-4 py-3"}`}>
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-white">Error</span>
+                  <span className="font-bold text-white">{`${message === "Form Created Successfully" ? "Success" : "Error"}`}</span>
                   <button
                     onClick={onClose}
                     className="text-white hover:text-gray-100 focus:outline-none"

@@ -3,8 +3,6 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import React, { useState } from "react";
 import Dropzone from "react-dropzone";
 import logo from "../assets/logo.png";
-import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
 import * as Yup from "yup";
 import toast, { Toaster } from "react-hot-toast";
 import Loader from "./Loader";
@@ -32,13 +30,28 @@ const FormSchema = Yup.object().shape({
   ward: Yup.string().required("Ward is required"),
 });
 
+const Dropdown = ({ options, field, form }) => {
+  return (
+    <select
+      {...field}
+      name="sex"
+      className="bg-gray-50 border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+    >
+      {options.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
+  );
+};
+
 const Formiks = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [images, setImages] = useState();
   const [serverError, setServerError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate();
   const initialValues = {
     name: "",
     aadharNumber: "",
@@ -48,7 +61,7 @@ const Formiks = () => {
     address: "",
     landmark: "",
     area: "",
-    city: "",
+    city: "Junagadh",
     ward: "",
   };
 
@@ -84,12 +97,10 @@ const Formiks = () => {
         formData
       );
       setLoading(false);
-      toast.success(res.data.message);
+      setIsPopupOpen(true);
+      setServerError(res.data.message);
+      setImages()
       resetForm();
-      setTimeout(() => {
-        navigate("/");
-        Cookies.remove("tokenShine2023");
-      }, 1000);
     } catch (error) {
       setLoading(false);
       setIsPopupOpen(true);
@@ -111,7 +122,7 @@ const Formiks = () => {
   };
 
   const maxDate = new Date();
-  maxDate.setFullYear(maxDate.getFullYear() - 65);
+  maxDate.setFullYear(maxDate.getFullYear() - 60);
   return (
     <>
       <Toaster />
@@ -148,7 +159,7 @@ const Formiks = () => {
                       Name
                     </label>
                     <Field
-                      // onChange={handleChange}
+                      maxLength={50}
                       type="text"
                       name="name"
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -235,7 +246,7 @@ const Formiks = () => {
                       Address Line 1
                     </label>
                     <Field
-                      // onChange={handleChange}
+                      maxLength={100}
                       type="text"
                       name="address"
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -255,7 +266,7 @@ const Formiks = () => {
                       Address Line 2
                     </label>
                     <Field
-                      // onChange={handleChange}
+                      maxLength={100}
                       type="text"
                       name="landmark"
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -335,7 +346,7 @@ const Formiks = () => {
                       Area
                     </label>
                     <Field
-                      // onChange={handleChange}
+                      maxLength={100}
                       type="text"
                       name="area"
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -349,22 +360,17 @@ const Formiks = () => {
                   </div>
                   <div>
                     <label
-                      for="first_name"
-                      className="block mb-2 text-sm font-medium text-gray-900"
+                      for="city"
+                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                     >
                       City
                     </label>
                     <Field
-                      // onChange={handleChange}
-                      type="text"
                       name="city"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="City"
-                    />
-                    <ErrorMessage
-                      name="city"
-                      component="div"
-                      style={{ color: "red" }}
+                      component={Dropdown}
+                      options={[
+                        { value: "Junagadh", label: "Junagadh" },
+                      ]}
                     />
                   </div>
                   <div>
@@ -375,11 +381,15 @@ const Formiks = () => {
                       Ward
                     </label>
                     <Field
-                      // onChange={handleChange}
-                      type="text"
+                      type="number"
                       name="ward"
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Ward"
+                      onKeyPress={(e) => {
+                        if (e.target.value.length >= 2) {
+                          e.preventDefault();
+                        }
+                      }}
                     />
                     <ErrorMessage
                       name="ward"
