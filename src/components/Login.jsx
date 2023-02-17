@@ -49,6 +49,7 @@ const Login = () =>
     {
       const response = await axios.post(
         "https://backend-form.onrender.com/api/v1/register",
+        // "http://localhost:5000/api/v1/register",
         {
           name: values.name,
           password: values.password,
@@ -56,6 +57,7 @@ const Login = () =>
       );
       setLoading(false)
       Cookies.set("tokenShine2023", response.data.token);
+      Cookies.set("username", response?.data?.user?.name);
       setSubmitting(false);
       resetForm();
       navigate('/auth/form');
