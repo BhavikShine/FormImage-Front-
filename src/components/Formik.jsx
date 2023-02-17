@@ -77,19 +77,19 @@ const Formiks = () => {
   }, []);
 
   const initialValues = {
-    name: "eer",
+    name: "",
     aadharNumber: "",
     mobileNumber: "",
     alternateMobileNumber: "",
-    gender: "Male",
+    gender: "",
     // image:"",
     dob: "",
-    address: "dfds",
-    landmark: "dsf",
+    address: "",
+    landmark: "",
     area: "Junagadh",
     city: "Junagadh",
-    pincode: "478878",
-    ward: "22",
+    pincode: "",
+    ward: "",
   };
 
   const username = Cookies.get("username");
@@ -126,21 +126,19 @@ const Formiks = () => {
       formData.append("userId", decoded.id);
       formData.append("latitude", latitude);
       formData.append("longitude", longitude);
-      setTimeout(async () => {
-        setLoading(true);
-        const res = await axios.post(
-          "https://backend-form.onrender.com/api/v1/submitform",
-          // "http://localhost:5000/api/v1/submitform",
-          formData
-        );
-        setLoading(false);
-        setIsPopupOpen(true);
-        setLatitude("");
-        setLongitude("");
-        setServerError(res.data.message);
-        setImages();
-        resetForm();
-      }, 1500);
+
+      const res = await axios.post(
+        // "https://backend-form.onrender.com/api/v1/submitform",
+        "http://localhost:5000/api/v1/submitform",
+        formData
+      );
+      setLoading(false);
+      setIsPopupOpen(true);
+      setLatitude("");
+      setLongitude("");
+      setServerError(res.data.message);
+      setImages();
+      resetForm();
     } catch (error) {
       setLoading(false);
       setIsPopupOpen(true);
@@ -149,6 +147,7 @@ const Formiks = () => {
       setLoading(false);
       setSubmitting(false);
     }
+    // setLoading(false)
   };
 
   useEffect(() => {
@@ -173,14 +172,16 @@ const Formiks = () => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await axios.get("http://localhost:5000/api/v1/logout").then((res) => {
-      if (res.status === 200) {
-        Cookies.remove("tokenShine2023");
-        Cookies.remove("username");
+    await axios
+      .get("https://backend-form.onrender.com/api/v1/logout")
+      .then((res) => {
+        if (res.status === 200) {
+          Cookies.remove("tokenShine2023");
+          Cookies.remove("username");
 
-        navigate("/");
-      }
-    });
+          navigate("/");
+        }
+      });
   };
 
   const maxDate = new Date();
@@ -390,8 +391,7 @@ const Formiks = () => {
                       name="area"
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     >
-                      <option value="">--Select your Area--</option>
-                      <option value="Area1">Area1</option>
+                      <option value="Junagadh">Junagadh</option>
                       <option value="Area2">Area2</option>
                       <option value="Area3">Area3</option>
                     </Field>
@@ -606,4 +606,3 @@ const Formiks = () => {
 };
 
 export default Formiks;
-  
